@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .groups-container{
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+        }
+    </style>
+    <div class="groups-container">
+    <div>
+        <h2>{{ group.name }}</h2>
+        <p>{{ group.description }}</p>
+    </div>
+    <div>
+        <h2>participants</h2>
+        {% for participant in group.members.all %}
+            <p>{{ participant.username }}</p>
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

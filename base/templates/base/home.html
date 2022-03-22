@@ -1,7 +1,12 @@
 {% extends 'main.html' %}
 {% block content %}
     <h3>Home page</h3>
+    <a href="{% url 'create-group' %}"><small>create group</small></a>
+    <hr>
     {% for group in groups %}
+        {% if request.user == group.leader %}
+        <a href="{% url 'delete-group' group.id %}"><small>delete</small></a>
+        {% endif %}
         <a href="{% url 'group' group.id %}"><h3>{{ group.name }}</h3></a>
         <p>{{ group.description }}</p>
     {% endfor %}

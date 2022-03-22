@@ -9,4 +9,6 @@ urlpatterns = [
     path('login', views.login_page, name="login-page"),
     path('logout', views.logout_user, name="logout"),
     path('register', views.register_user, name="register-page"),
+    path('create-group', views.group_creation_page, name="create-group"),
+    path('delete-group/<int:pk>', views.delete_group, name="delete-group"),
 ]

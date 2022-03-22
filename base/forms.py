@@ -1,13 +1,13 @@
 from django.forms import ModelForm
-from .models import User
+from .models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 
 
-# class RoomForm(ModelForm):
-#     class Meta:
-#         model = Room
-#         fields = '__all__'
-#         exclude = ['host', 'participants']
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = '__all__'
+        exclude = ['members', 'leader']
 
 
 # class UserForm(ModelForm):

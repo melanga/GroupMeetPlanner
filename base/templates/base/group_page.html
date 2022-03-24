@@ -12,6 +12,10 @@
         <h2>{{ group.name }}</h2>
         <p>{{ group.description }}</p>
         <hr>
+        {% if request.user != group.leader %}
+            <a href="{% url 'leave-group' group.id %}">leave group</a>
+            <hr>
+        {% endif %}
         {% for time_slot in time_slots %}
             <div>
                 <p>{{ time_slot.user.name }} available </p>
@@ -38,8 +42,26 @@
     <div>
         <h2>participants</h2>
         {% for participant in group.members.all %}
-            <p>{{ participant.username }}</p>
+            {{ participant.username }} &emsp;
+            {% if request.user == group.leader and participant != group.leader %}
+                <a href="{% url 'remove-member' participant.id group.id %}"><small>remove</small></a>
+            {% endif %}<br>
         {% endfor %}
+        <hr>
+        <div>
+        <h2>Add members</h2>
+        <form method="GET" action="">
+            <label> Search by user name <br>
+                <input type="text" placeholder="Search user" name="q">
+            </label>
+        </form>
+        {% for user in users %}
+            {{ user.username }} &emsp;
+            {% if request.user == group.leader %}
+                <a href="{% url 'add-member' user.id group.id %}"><small>add</small></a>
+            {% endif %}
+        {% endfor %}
+        </div>
     </div>
     </div>
 {% endblock %}

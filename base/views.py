@@ -20,6 +20,10 @@ def home_page(request):
 def group_page(request, pk):
     group = Group.objects.get(id=pk)
     time_slots = group.time_set.all()
+    q = request.GET.get('q')
+    user_search = {}
+    if q is not None:
+        user_search = User.objects.filter(username__contains=q)
     if request.method == "POST":
         time = Time.objects.create(
             start_time=request.POST.get('start_time'),
@@ -29,10 +33,30 @@ def group_page(request, pk):
         )
         group.members.add(request.user)
         return redirect('group', pk=group.id)
-    return render(request, 'base/group_page.html', {'group': group, 'time_slots': time_slots})
+    return render(request, 'base/group_page.html', {'group': group, 'time_slots': time_slots, 'users': user_search})
 
 
-@login_required(login_url='login')
+def add_member(request, uid, gid):
+    user = User.objects.get(id=uid)
+    group = Group.objects.get(id=gid)
+    group.members.add(user)
+    return redirect('group', pk=gid)
+
+
+def remove_member(request, uid, gid):
+    user = User.objects.get(id=uid)
+    group = Group.objects.get(id=gid)
+    group.members.remove(user)
+    return redirect('group', pk=gid)
+
+
+def leave_group(request, gid):
+    group = Group.objects.get(id=gid)
+    group.members.remove(request.user)
+    return redirect('home')
+
+
+@login_required(login_url='login-page')
 def group_creation_page(request):
     form = GroupForm
     if request.method == "POST":

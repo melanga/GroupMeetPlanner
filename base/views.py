@@ -80,6 +80,17 @@ def delete_group(request, pk):
     return redirect('home')
 
 
+def update_group(request, gid):
+    group = Group.objects.get(id=gid)
+    group_form = GroupForm(instance=group)
+    if request.method == "POST":
+        group.name = request.POST.get('name')
+        group.description = request.POST.get('description')
+        group.save()
+        return redirect('group', pk=group.id)
+    return render(request, 'base/update_group.html', {'group_form': group_form})
+
+
 @login_required(login_url='login')
 def delete_time(request, pk):
     time = Time.objects.get(id=pk)

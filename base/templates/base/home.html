@@ -9,5 +9,6 @@
         {% endif %}
         <a href="{% url 'group' group.id %}"><h3>{{ group.name }}</h3></a>
         <p>{{ group.description }}</p>
+        <hr>
     {% endfor %}
 {% endblock %}

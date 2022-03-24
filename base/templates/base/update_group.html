@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <h2>update group</h2>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% for field in group_form %}
+            <label>{{ field.label }}<br>
+            {{ field }}
+            </label><br>
+        {% endfor %}
+        <input type="submit" value="Update">
+    </form>
+{% endblock %}

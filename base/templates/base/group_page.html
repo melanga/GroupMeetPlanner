@@ -15,17 +15,24 @@
         {% if request.user != group.leader %}
             <a href="{% url 'leave-group' group.id %}">leave group</a>
             <hr>
+        {% else %}
+            <a href="{% url 'update-group' group.id %}">update group</a>
+            <hr>
         {% endif %}
-        {% for time_slot in time_slots %}
-            <div>
-                <p>{{ time_slot.user.name }} available </p>
-                <p>from {{ time_slot.start_time }} to {{ time_slot.end_time }}</p>
-                {% if request.user == time_slot.user %}
-                    <a href="{% url 'delete-time' time_slot.id %}">delete</a>
-                    <a href="{% url 'update_time' time_slot.id %}">update</a>
-                {% endif %}
-            </div>
-        {% endfor %}
+        {% if time_slots.count == 0 %}
+            <p>There are no time slots inputed</p>
+        {% else %}
+            {% for time_slot in time_slots %}
+                <div>
+                    <p>{{ time_slot.user.name }} available </p>
+                    <p>from {{ time_slot.start_time }} to {{ time_slot.end_time }}</p>
+                    {% if request.user == time_slot.user %}
+                        <a href="{% url 'delete-time' time_slot.id %}">delete</a>
+                        <a href="{% url 'update_time' time_slot.id %}">update</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
         <hr>
         <div>
             <form method="POST" action="">

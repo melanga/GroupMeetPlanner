@@ -87,6 +87,16 @@ def delete_time(request, pk):
     return redirect('group', pk=time.group.id)
 
 
+def update_time(request, pk):
+    time = Time.objects.get(id=pk)
+    if request.method == "POST":
+        time.start_time = request.POST.get("start_time")
+        time.end_time = request.POST.get("end_time")
+        time.save()
+        return redirect('group', time.group.id)
+    return render(request, 'base/update_time.html', {'time': time})
+
+
 def login_page(request):
     if request.user.is_authenticated:
         return redirect('home')

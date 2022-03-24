@@ -1,0 +1,16 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <label>Enter Start time
+            <input type="time" name="start_time" value="{{ time.start_time.isoformat }}" >
+        </label>
+        <label>Enter End time
+            <input type="time" name="end_time" value="{{ time.end_time.isoformat }}" >
+        </label>
+        <input type="submit" value="update">
+    </form>
+    </div>
+{% endblock %}

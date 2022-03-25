@@ -38,4 +38,6 @@ class Time(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.start_time.hour) + " : " + str(self.end_time.hour)
+        return str(self.start_time.isoformat(timespec='minutes')) \
+               + " : " \
+               + str(self.end_time.isoformat(timespec='minutes'))

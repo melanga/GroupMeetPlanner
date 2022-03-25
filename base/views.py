@@ -76,8 +76,10 @@ def group_creation_page(request):
 @login_required(login_url='login')
 def delete_group(request, pk):
     group = Group.objects.get(id=pk)
-    group.delete()
-    return redirect('home')
+    if request.method == "POST":
+        group.delete()
+        return redirect('home')
+    return render(request, 'base/confirm_delete.html', {'obj': group})
 
 
 def update_group(request, gid):
@@ -94,8 +96,10 @@ def update_group(request, gid):
 @login_required(login_url='login')
 def delete_time(request, pk):
     time = Time.objects.get(id=pk)
-    time.delete()
-    return redirect('group', pk=time.group.id)
+    if request.method == "POST":
+        time.delete()
+        return redirect('group', pk=time.group.id)
+    return render(request, 'base/confirm_delete.html', {'obj': time})
 
 
 def update_time(request, pk):

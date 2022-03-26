@@ -20,8 +20,15 @@
             <hr>
         {% endif %}
         {% if time_slots.count == 0 %}
-            <p>There are no time slots inputed</p>
+            <p>There are no time slots inputted</p>
         {% else %}
+            <div>
+                <h2>Available time</h2>
+                <p>from {{ available_time.start_time }} to {{ available_time.end_time }} all members are available</p>
+                <hr>
+            </div>
+            <div>
+            <h2>Time slots</h2>
             {% for time_slot in time_slots %}
                 <div>
                     <p>{{ time_slot.user.name }} available </p>
@@ -32,6 +39,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
+            </div>
         {% endif %}
         <hr>
         <div>

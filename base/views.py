@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib import messages
-
+from .time_operations import check_time_validity, calculate_intersection, intersection_of_intervals
 from .forms import ModifiedUserCreationForm, GroupForm
 from .models import Group, Time, User
 
@@ -20,6 +20,9 @@ def home_page(request):
 def group_page(request, pk):
     group = Group.objects.get(id=pk)
     time_slots = group.time_set.all()
+    available_time = {}
+    if time_slots is not None:
+        available_time = intersection_of_intervals(time_slots)
     q = request.GET.get('q')
     user_search = {}
     if q is not None:
@@ -33,7 +36,12 @@ def group_page(request, pk):
         )
         group.members.add(request.user)
         return redirect('group', pk=group.id)
-    return render(request, 'base/group_page.html', {'group': group, 'time_slots': time_slots, 'users': user_search})
+    return render(request, 'base/group_page.html', {
+        'group': group,
+        'time_slots': time_slots,
+        'users': user_search,
+        'available_time': available_time
+    })
 
 
 def add_member(request, uid, gid):
@@ -107,8 +115,12 @@ def update_time(request, pk):
     if request.method == "POST":
         time.start_time = request.POST.get("start_time")
         time.end_time = request.POST.get("end_time")
-        time.save()
-        return redirect('group', time.group.id)
+        if check_time_validity(time.start_time, time.end_time):
+            time.save()
+            return redirect('group', time.group.id)
+        else:
+            print("enter valid time")
+            return redirect('update_time', time.id)
     return render(request, 'base/update_time.html', {'time': time})
 
 

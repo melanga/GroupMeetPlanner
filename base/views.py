@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .time_operations import check_time_validity, calculate_intersection, intersection_of_intervals
+from .time_operations import check_time_validity, intersection_of_intervals
 from .forms import ModifiedUserCreationForm, GroupForm
 from .models import Group, Time, User
 
@@ -28,14 +28,20 @@ def group_page(request, pk):
     if q is not None:
         user_search = User.objects.filter(username__contains=q)
     if request.method == "POST":
-        time = Time.objects.create(
-            start_time=request.POST.get('start_time'),
-            end_time=request.POST.get('end_time'),
-            user=request.user,
-            group=group
-        )
-        group.members.add(request.user)
-        return redirect('group', pk=group.id)
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        if check_time_validity(start_time, end_time):
+            time = Time.objects.create(
+                start_time=start_time,
+                end_time=end_time,
+                user=request.user,
+                group=group
+            )
+            group.members.add(request.user)
+            return redirect('group', pk=group.id)
+        else:
+            return redirect('group', pk=group.id)
+
     return render(request, 'base/group_page.html', {
         'group': group,
         'time_slots': time_slots,

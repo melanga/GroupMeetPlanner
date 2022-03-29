@@ -1,21 +1,18 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
     <title>Plan your group next group meet</title>
 </head>
 <body>
-<a href="{% url 'home' %}">
-    <h1>Plan your group next group meet</h1>
-</a>
-{% if request.user.is_authenticated %}
-    <a href="{% url 'logout' %}">logout</a>
-    <small>{{ request.user.name }}</small>
-{% else %}
-<a href="{% url 'login-page' %}">login</a>
-{% endif %}
-<hr>
-{% block content %}
-{% endblock content %}
+    {% include 'navbar.html' %}
+    {% block content %}
+    {% endblock content %}
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

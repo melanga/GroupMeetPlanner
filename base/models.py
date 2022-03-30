@@ -9,7 +9,7 @@ class User(AbstractUser):
     # default_time = models.ForeignKey(
     #     'Time', on_delete=models.SET_NULL, null=True, blank=True, related_name='default_time'
     # )
-    # profile_pic = models.ImageField(null=True, default="avatar.svg")
+    profile_pic = models.ImageField(null=True, default="avatar.svg")
     REQUIRED_FIELDS = []
 
 

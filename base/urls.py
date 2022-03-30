@@ -16,4 +16,5 @@ urlpatterns = [
     path('add-member/<int:uid>/<int:gid>', views.add_member, name="add-member"),
     path('remove-member/<int:uid>/<int:gid>', views.remove_member, name="remove-member"),
     path('leave-group/<int:gid>', views.leave_group, name="leave-group"),
+    path('update-user', views.update_user, name="update-user"),
 ]

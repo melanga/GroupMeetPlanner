@@ -48,7 +48,7 @@
             <div class="roomListRoom__header">
                 <a href="{% url 'home' %}" class="roomListRoom__author">
                 <div class="avatar avatar--small">
-                  <img src="{% static 'images/avatar.svg'%}" />
+                  <img src="{{ group.leader.profile_pic.url }}" />
                 </div>
                 <span>@{{ group.leader.username }}</span>
                 </a>

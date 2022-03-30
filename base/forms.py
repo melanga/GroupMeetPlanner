@@ -10,10 +10,10 @@ class GroupForm(ModelForm):
         exclude = ['members', 'leader']
 
 
-# class UserForm(ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['avatar', 'name', 'username', 'email', 'bio']
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['profile_pic', 'name', 'username', 'email', 'bio']
 
 
 class ModifiedUserCreationForm(UserCreationForm):

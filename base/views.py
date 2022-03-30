@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .time_operations import check_time_validity, intersection_of_intervals
-from .forms import ModifiedUserCreationForm, GroupForm
+from .forms import ModifiedUserCreationForm, GroupForm, UserForm
 from .models import Group, Time, User
 
 
@@ -166,6 +166,17 @@ def register_user(request):
         else:
             messages.error(request, 'An error occurred during registration')
     return render(request, 'base/register.html', {'register_form': form})
+
+
+def update_user(request):
+    user = request.user
+    form = UserForm(instance=user)
+    if request.method == "POST":
+        form = UserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    return render(request, 'base/update_user.html', {'form': form})
 
 
 def logout_user(request):

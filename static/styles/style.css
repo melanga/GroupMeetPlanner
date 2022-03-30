@@ -1027,9 +1027,6 @@ a {
   transition: all 0.3s ease-in-out;
 }
 
-.room__author:hover {
-  text-decoration: underline;
-}
 
 .room__topics {
   padding: 0.5rem 1.5rem;
@@ -1058,7 +1055,7 @@ a {
   border-radius: 0.7rem;
   overflow-y: auto;
   height: 100%;
-  margin-top: 28vh;
+  margin-top: 12vh;
   padding: 0 2rem 4rem 2rem;
 }
 
@@ -1116,7 +1113,7 @@ a {
   border-radius: 0.7rem;
   height: 4.5rem;
   width: 100%;
-  margin-top: -1rem;
+  margin: 5px;
   padding: 1.2rem;
   font-size: 1.4rem;
   font-weight: 500;
@@ -1162,4 +1159,8 @@ a {
   font-weight: 500;
   color: var(--color-main);
   font-weight: 1.4rem;
+}
+
+.participant a {
+  white-space: nowrap;
 }

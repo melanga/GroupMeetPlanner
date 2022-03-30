@@ -1,0 +1,83 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .groups-container{
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+        }
+    </style>
+    <div class="groups-container">
+    <div>
+        <h2>{{ group.name }}</h2>
+        <p>{{ group.description }}</p>
+        <hr>
+        {% if request.user != group.leader %}
+            <a href="{% url 'leave-group' group.id %}">leave group</a>
+            <hr>
+        {% else %}
+            <a href="{% url 'update-group' group.id %}">update group</a>
+            <hr>
+        {% endif %}
+        {% if time_slots.count == 0 %}
+            <p>There are no time slots inputted</p>
+        {% else %}
+            <div>
+                <h2>Available time</h2>
+                <p>from {{ available_time.start_time }} to {{ available_time.end_time }} all members are available</p>
+                <hr>
+            </div>
+            <div>
+            <h2>Time slots</h2>
+            {% for time_slot in time_slots %}
+                <div>
+                    <p>{{ time_slot.user.name }} available </p>
+                    <p>from {{ time_slot.start_time }} to {{ time_slot.end_time }}</p>
+                    {% if request.user == time_slot.user %}
+                        <a href="{% url 'delete-time' time_slot.id %}">delete</a>
+                        <a href="{% url 'update_time' time_slot.id %}">update</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        <hr>
+        <div>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <label>Enter Start time
+                    <input type="time" name="start_time" >
+                </label>
+                <label>Enter End time
+                    <input type="time" name="end_time" >
+                </label>
+                <input type="submit">
+            </form>
+        </div>
+    </div>
+    <div>
+        <h2>participants</h2>
+        {% for participant in group.members.all %}
+            {{ participant.username }} &emsp;
+            {% if request.user == group.leader and participant != group.leader %}
+                <a href="{% url 'remove-member' participant.id group.id %}"><small>remove</small></a>
+            {% endif %}<br>
+        {% endfor %}
+        <hr>
+        <div>
+        <h2>Add members</h2>
+        <form method="GET" action="">
+            <label> Search by user name <br>
+                <input type="text" placeholder="Search user" name="q">
+            </label>
+        </form>
+        {% for user in users %}
+            {{ user.username }} &emsp;
+            {% if request.user == group.leader %}
+                <a href="{% url 'add-member' user.id group.id %}"><small>add</small></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    </div>
+{% endblock %}

@@ -1,6 +1,15 @@
 import datetime
 
 
+# end time can be inputted from midnight to six a.m.
+def end_time_adjust(end_time):
+    midnight = datetime.datetime.strptime("00:00", "%H:%M")
+    six_am = datetime.datetime.strptime("06:00", "%H:%M")
+    if six_am >= end_time >= midnight:
+        end_time += datetime.timedelta(days=1)
+    return end_time
+
+
 def check_time_validity(start_time, end_time):
     start_time = datetime.datetime.strptime(start_time[:5], "%H:%M")
     end_time = datetime.datetime.strptime(end_time[:5], "%H:%M")
@@ -29,50 +38,74 @@ def intersection_of_intervals(time_slots):
     return intersection_period
 
 
-def end_time_adjust(end_time):
-    midnight = datetime.datetime.strptime("00:00", "%H:%M")
-    six_am = datetime.datetime.strptime("06:00", "%H:%M")
-    if six_am >= end_time >= midnight:
-        end_time += datetime.timedelta(days=1)
-    return end_time
-# def calculate_intersection(time_slots):
-#     total_intersection = {}
-#     for i, time_slot in enumerate(time_slots):
-#         if i < time_slots.count() - 1:
-#             if i == 0:
-#                 time_slot1 = time_slot
-#                 time_slot2 = time_slots[i + 1]
-#                 total_intersection = intersection(time_slot1.start_time.isoformat(),
-#                                                   time_slot1.end_time.isoformat(),
-#                                                   time_slot2.start_time.isoformat(),
-#                                                   time_slot2.end_time.isoformat())
-#             else:
-#                 start_time1 = total_intersection['start_time'].isoformat()
-#                 end_time1 = total_intersection['end_time'].isoformat()
-#                 start_time2 = time_slots[i + 1].start_time.isoformat()
-#                 end_time2 = time_slots[i + 1].end_time.isoformat()
-#                 total_intersection = intersection(start_time1, end_time1, start_time2, end_time2)
-#     print(total_intersection)
-#     return []
-#
-#
-# # intersection period of two time intervals
-# def intersection(start_time1, end_time1, start_time2, end_time2):
-#     start_time1 = datetime.datetime.strptime(start_time1[:5], "%H:%M")
-#     end_time1 = datetime.datetime.strptime(end_time1[:5], "%H:%M")
-#     start_time2 = datetime.datetime.strptime(start_time2[:5], "%H:%M")
-#     end_time2 = datetime.datetime.strptime(end_time2[:5], "%H:%M")
-#
-#     # check if the time intervals intersect
-#     if start_time1 < end_time2 and start_time2 < end_time1:
-#         # print("intersect")
-#         # calculate intersection time interval
-#         print(start_time1.time(), end_time1.time(), start_time2.time(), end_time2.time())
-#         start_time = max(start_time1, start_time2)
-#         end_time = min(end_time1, end_time2)
-#         # print(start_time, end_time)
-#         return {'start_time': start_time.time(),
-#                 'end_time': end_time.time()}
-#     else:
-#         # print("no intersect")
-#         return None
+# output the combinations of time slots with one time slot by each user
+def time_slot_combinations(time_slots_per_user):
+    # number of arrays
+    n = len(time_slots_per_user)
+    indices = [0 for i in range(n)]
+    combinations = []
+    while 1:
+        combination = []
+        # get the current combination and append
+        for i in range(n):
+            combination.append(time_slots_per_user[i][indices[i]])
+        combinations.append(combination)
+
+        # find the rightmost array that has more elements left after the current element in that array
+        next_index = n - 1
+
+        while next_index >= 0 and (indices[next_index] + 1 >= time_slots_per_user[next_index].count()):
+            next_index -= 1
+
+        # no such array is found so no more combinations left
+        if next_index < 0:
+            break
+
+        # if found move to next element in that array
+        indices[next_index] += 1
+
+        # for all arrays to the right of this array current index again points to first element
+        for i in range(next_index + 1, n):
+            indices[i] = 0
+    return combinations
+
+
+# calculates the intersection combinations available for time slot combinations
+def calculate_intersections_of_combinations(combinations):
+    intersections_of_combinations = []
+    for combination in combinations:
+        intersection_of_combination = intersection_of_intervals(combination)
+        if intersection_of_combination['start_time'] != "":
+            intersections_of_combinations.append(intersection_of_combination)
+    return intersections_of_combinations
+
+
+def get_available_times(time_slots):
+    available_time_slot_combinations = time_slot_combinations(time_slots)
+    intersections_of_combinations = calculate_intersections_of_combinations(available_time_slot_combinations)
+    available_times = []
+    if len(intersections_of_combinations) <= 1:
+        available_times = intersections_of_combinations
+    # if times intersect combine those times
+    for i, intersection in enumerate(intersections_of_combinations):
+        intersection_period = {
+            'start_time': intersection['start_time'],
+            'end_time': intersection['end_time'],
+        }
+        if i < len(intersections_of_combinations)-1:
+            start_time1 = datetime.datetime.strptime(intersection['start_time'][:5], "%H:%M")
+            end_time1 = end_time_adjust(datetime.datetime.strptime(intersection['end_time'][:5], "%H:%M"))
+            start_time2 = datetime.datetime.strptime(intersections_of_combinations[i+1]['start_time'][:5], "%H:%M")
+            end_time2 = end_time_adjust(datetime.datetime.strptime(intersections_of_combinations[i+1]['end_time'][:5], "%H:%M"))
+            if start_time1 < end_time2 and start_time2 < end_time1:
+                start_time = min(start_time1, start_time2)
+                end_time = max(end_time1, end_time2)
+                intersection_period['start_time'] = start_time.time().isoformat(timespec='minutes')
+                intersection_period['end_time'] = end_time.time().isoformat(timespec='minutes')
+                available_times.append(intersection_period)
+            else:
+                if not intersection_period.__contains__(intersection):
+                    available_times.append(intersection)
+                if not intersection_period.__contains__(intersection[i]):
+                    available_times.append(intersection[i])
+    return available_times

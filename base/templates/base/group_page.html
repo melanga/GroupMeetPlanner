@@ -53,6 +53,10 @@
                                 </svg>
                             </a>
                         </div>
+                    {% else %}
+                        <div class="room__topRight">
+                            <a href="{% url 'leave-group' group.id %}"><span>Leave</span></a>
+                        </div>
                     {% endif %}
                 </div>
                 <div class="room__box scroll">
@@ -85,7 +89,8 @@
                                         {% for available_time in available_times %}
                                             <div>
                                                 <h2>Available time</h2>
-                                                <p>from {{ available_time.start_time }} to {{ available_time.end_time }} all
+                                                <p>from {{ available_time.start_time }} to {{ available_time.end_time }}
+                                                    all
                                                     members are available</p>
                                                 <hr>
                                             </div>
@@ -148,7 +153,7 @@
 
             <!--   Start -->
             <div class="participants">
-                <h3 class="participants__top">Participants <span>({{ participants.count }} Joined)</span></h3>
+                <h3 class="participants__top">Participants <span>({{ group.members.all.count }} Joined)</span></h3>
                 <div class="participants__list scroll">
                     {% for participant in group.members.all %}
                         <a class="participant">

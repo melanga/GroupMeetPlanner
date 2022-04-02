@@ -104,8 +104,6 @@ def get_available_times(time_slots):
                 intersection_period['end_time'] = end_time.time().isoformat(timespec='minutes')
                 available_times.append(intersection_period)
             else:
-                if not intersection_period.__contains__(intersection):
-                    available_times.append(intersection)
-                if not intersection_period.__contains__(intersection[i]):
-                    available_times.append(intersection[i])
+                available_times.append(intersection)
+                available_times.append(intersections_of_combinations[i+1])
     return available_times

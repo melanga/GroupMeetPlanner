@@ -170,11 +170,12 @@
                         </a>
                     {% endfor %}
                     <div>
-                        <h2>Add members</h2>
+                        <h3 class="participants__top">Add members</h3>
                         <form method="GET" action="">
+                            <div class="form__group">
                             <label> Search by user name <br>
                                 <input type="text" placeholder="Search user" name="q">
-                            </label>
+                            </label></div>
                         </form>
                         {% for user in users %}
                             {{ user.username }} &emsp;

@@ -17,4 +17,6 @@ urlpatterns = [
     path('remove-member/<int:uid>/<int:gid>', views.remove_member, name="remove-member"),
     path('leave-group/<int:gid>', views.leave_group, name="leave-group"),
     path('update-user', views.update_user, name="update-user"),
+
+    path('password-change/', views.PasswordChange.as_view(), name="password-change")
 ]

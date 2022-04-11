@@ -7,6 +7,10 @@ from .time_operations import check_time_validity, get_available_times
 from .forms import ModifiedUserCreationForm, GroupForm, UserForm
 from .models import Group, Time, User
 
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
+from django.urls import reverse_lazy
+
 
 def home_page(request):
     groups = {}
@@ -187,3 +191,9 @@ def update_user(request):
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+
+class PasswordChange(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('home')
+    template_name = 'base/password_change.html'
